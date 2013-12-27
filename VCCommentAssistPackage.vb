@@ -103,7 +103,11 @@ Inherits Package
         Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
         Dim clsid As Guid = Guid.Empty
         Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "VCCommentAssist", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCFileHeadCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+
+        Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
+        FileCommentsEn(dte)
+
     End Sub
 
     Private Sub MenuItemVCFunctionCallback(ByVal sender As Object, ByVal e As EventArgs)
@@ -111,7 +115,11 @@ Inherits Package
         Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
         Dim clsid As Guid = Guid.Empty
         Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "VCCommentAssist", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCFunctionCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+
+        Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
+        FunctionCommentEn(dte)
+
     End Sub
 
     Private Sub MenuItemVCClassCallback(ByVal sender As Object, ByVal e As EventArgs)
@@ -119,7 +127,11 @@ Inherits Package
         Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
         Dim clsid As Guid = Guid.Empty
         Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "VCCommentAssist", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCClassCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+
+        Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
+        ClassCommentEn(dte)
+
     End Sub
 
 
@@ -128,7 +140,10 @@ Inherits Package
         Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
         Dim clsid As Guid = Guid.Empty
         Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "VCCommentAssist", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCOneLineCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+
+        Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
+        CommentOneLine(DTE)
     End Sub
 
 
@@ -137,7 +152,11 @@ Inherits Package
         Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
         Dim clsid As Guid = Guid.Empty
         Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "VCCommentAssist", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCAlignCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
+
+        Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
+        CodeBlockAlign(dte)
+
     End Sub
 
 
@@ -211,7 +230,7 @@ Inherits Package
             End If
 
             If (dte.ActiveDocument.Selection.CurrentLine = x_endfile) Then
-                MsgBox("函数定义有错或定位出错，无法发现成对的()！", vbOKOnly, "错误")
+                MsgBox("Function define error or cursor in error line，cannot be found in pairs()！", vbOKOnly, "ERROR")
                 Exit Sub
             End If
 
@@ -235,7 +254,7 @@ Inherits Package
         End While
 
         If (minus_angel_count <> plus_angel_count) Then
-            MsgBox("函数定义有错或定位出错,无法发现成对的<>括号！", vbOKOnly, "错误")
+            MsgBox("Function define error or cursor in error line，cannot be found in pairs <>！", vbOKOnly, "ERROR")
         End If
 
 
@@ -298,7 +317,7 @@ Inherits Package
     Private Function JudgeWindowsType(ByVal dte As DTE) As Boolean
         ' check if any file is open 
         If dte.ActiveWindow.Type <> EnvDTE.vsWindowType.vsWindowTypeDocument Then
-            MsgBox("这个宏只能在文档窗口处于激活状态时运行.", vbOKOnly, "错误")
+            MsgBox("This macro can only be run when the document window is activated.", vbOKOnly, "ERROR")
             Return False
         End If
 
@@ -311,7 +330,7 @@ Inherits Package
         End If
 
         If ext_name <> ".h" And ext_name <> ".hpp" And ext_name <> ".hxx" And ext_name <> ".cpp" And ext_name <> ".c" And ext_name <> ".cxx" And ext_name <> ".inc" Then
-            MsgBox("这个宏只能在编辑C/C++文档时运行.", vbOKOnly, "错误")
+            MsgBox("This macro can only be run when a document is edited c/c++ file.", vbOKOnly, "ERROR")
             Return False
         End If
         Return True
@@ -365,7 +384,7 @@ Inherits Package
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@return     " + return_name)
+        dte.ActiveDocument.Selection.Insert("* @return     " + return_name)
 
         str_fun = Right(str_fun, Len(str_fun) - start_bracket + 1)
 
@@ -390,15 +409,15 @@ Inherits Package
         ''dte.ActiveDocument.Selection.Insert("@author     " & author_name & "  @date " & System.DateTime.Now.ToLongDateString())
         ''dte.ActiveDocument.Selection.NewLine()
         ''dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@brief      ")
+        dte.ActiveDocument.Selection.Insert("* @brief      ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         GetTemplateParNameEn(dte, str_analysis)
         ''GetClassNameEn(str_analysis)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@note       ")
+        dte.ActiveDocument.Selection.Insert("* @note       ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert("*/")
@@ -435,7 +454,7 @@ Inherits Package
             End If
 
             If (dte.ActiveDocument.Selection.CurrentLine = x_endfile) Then
-                MsgBox("函数定义有错或定位出错，无法发现成对的()！", vbOKOnly, "错误")
+                MsgBox("Class define error or cursor in error line，cannot be found in pairs()！", vbOKOnly, "ERROR")
                 Exit Sub
             End If
 
@@ -488,7 +507,7 @@ Inherits Package
             Dim start_pos As Integer = InStr(class_name, "class ")
             class_name = Right(class_name, Len(class_name) - start_pos - 4)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("@class      " & class_name)
+            dte.ActiveDocument.Selection.Insert("* @class      " & class_name)
         End If
 
         '如果是结构的定义
@@ -496,7 +515,7 @@ Inherits Package
             Dim start_pos As Integer = InStr(class_name, "struct ")
             class_name = Right(class_name, Len(class_name) - start_pos - 5)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("@struct     " & class_name)
+            dte.ActiveDocument.Selection.Insert("* @struct     " & class_name)
         End If
 
         '
@@ -506,7 +525,7 @@ Inherits Package
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@ref        " & inherit_class)
+        dte.ActiveDocument.Selection.Insert("* @ref        " & inherit_class)
     End Sub
 
     '用于得到函数参数
@@ -694,9 +713,9 @@ Inherits Package
             dte.ActiveDocument.Selection.NewLine()
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
             If (if_func) Then
-                dte.ActiveDocument.Selection.Insert("@param      ")
+                dte.ActiveDocument.Selection.Insert("* @param      ")
             Else
-                dte.ActiveDocument.Selection.Insert("@tparam     ")
+                dte.ActiveDocument.Selection.Insert("* @tparam     ")
             End If
             dte.ActiveDocument.Selection.Text = str_param
 
@@ -728,46 +747,46 @@ Inherits Package
         dte.ActiveDocument.Selection.Insert("/*!")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@copyright  2004-" & System.DateTime.Now.Year & "  " & copyright_str)
+        dte.ActiveDocument.Selection.Insert("* @copyright  2004-" & System.DateTime.Now.Year & "  " & copyright_str)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@filename   " & file_name)
+        dte.ActiveDocument.Selection.Insert("* @filename   " & file_name)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@author     " & author_name)
+        dte.ActiveDocument.Selection.Insert("* @author     " & author_name)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@version    ")
+        dte.ActiveDocument.Selection.Insert("* @version    ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@date       " & System.DateTime.Now.ToLongDateString())
+        dte.ActiveDocument.Selection.Insert("* @date       " & System.DateTime.Now.ToLongDateString())
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@brief      ")
+        dte.ActiveDocument.Selection.Insert("* @brief      ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@details    ")
+        dte.ActiveDocument.Selection.Insert("* @details    ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@note       ")
+        dte.ActiveDocument.Selection.Insert("* @note       ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("            ")
+        dte.ActiveDocument.Selection.Insert("*             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert("*/")
@@ -953,5 +972,19 @@ Inherits Package
         dte.ActiveDocument.Selection.SelectAll()
         dte.ActiveDocument.Selection.Text = sel_text
     End Sub
+
+    '增加一行注释
+    Sub CommentOneLine(ByRef dte As DTE)
+
+        'judage Open windows type or file type.
+        If JudgeWindowsType(dte) = False Then
+            Exit Sub
+        End If
+        dte.ActiveDocument.Selection.NewLine()
+        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+        dte.ActiveDocument.Selection.Insert("///")
+    End Sub
+
+
 
 End Class
