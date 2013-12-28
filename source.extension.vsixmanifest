@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="9aee591d-45c9-4ca8-8a60-c00e4883093e" Version="2.0" Language="en-US" Publisher="FXL Company" />
+    <Identity Id="9aee591d-45c9-4ca8-8a60-c00e4883093e" Version="2.1" Language="en-US" Publisher="FXL Company" />
     <DisplayName>VCCommentAssist</DisplayName>
     <Description>VSPackage,Assist comment your Visual studio C++ (VC++) code.Include file head,class desc,function desc,template desc.</Description>
+    <Icon>Package.ico</Icon>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0]" />

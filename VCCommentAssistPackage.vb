@@ -29,12 +29,13 @@ Imports Microsoft.VisualStudio.Shell
     '
 ' The ProvideMenuResource attribute is needed to let the shell know that this package exposes some menus.
 
-    <PackageRegistration(UseManagedResourcesOnly := true), _ 
-    InstalledProductRegistration("#110", "#112", "1.0", IconResourceID := 400), _
-    ProvideMenuResource("Menus.ctmenu", 1), _    
-    Guid(GuidList.guidVCCommentAssistPkgString)> _
-    Public NotInheritable Class VCCommentAssistPackage
-Inherits Package
+<PackageRegistration(UseManagedResourcesOnly:=True), _
+InstalledProductRegistration("#110", "#112", "2.0", IconResourceID:=400), _
+ProvideMenuResource("Menus.ctmenu", 1), _
+Guid(GuidList.guidVCCommentAssistPkgString)> _
+Public NotInheritable Class VCCommentAssistPackage
+
+    Inherits Package
 
     ''' <summary>
     ''' Default constructor of the package.
@@ -49,14 +50,14 @@ Inherits Package
 
 
 
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' Overridden Package Implementation
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' Overridden Package Implementation
 #Region "Package Members"
 
-''' <summary>
-''' Initialization of the package; this method is called right after the package is sited, so this is the place
-''' where you can put all the initialization code that rely on services provided by VisualStudio.
-''' </summary>
+    ''' <summary>
+    ''' Initialization of the package; this method is called right after the package is sited, so this is the place
+    ''' where you can put all the initialization code that rely on services provided by VisualStudio.
+    ''' </summary>
     Protected Overrides Sub Initialize()
         Debug.WriteLine(String.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", Me.GetType().Name))
         MyBase.Initialize()
@@ -93,6 +94,7 @@ Inherits Package
 
 #End Region
 
+
     ''' <summary>
     ''' This function is the callback used to execute a command when the a menu item is clicked.
     ''' See the Initialize method to see how the menu item is associated to this function using
@@ -106,14 +108,14 @@ Inherits Package
     End Sub
 
     Private Sub MenuItemVCFunctionCallback(ByVal sender As Object, ByVal e As EventArgs)
-        
+
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         FunctionCommentEn(dte)
 
     End Sub
 
     Private Sub MenuItemVCClassCallback(ByVal sender As Object, ByVal e As EventArgs)
-        
+
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         ClassCommentEn(dte)
 
@@ -122,14 +124,14 @@ Inherits Package
 
     Private Sub MenuItemVCOneLineCallback(ByVal sender As Object, ByVal e As EventArgs)
         ' Show a Message Box to prove we were here
-        
+
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
-        CommentOneLine(DTE)
+        CommentOneLine(dte)
     End Sub
 
 
     Private Sub MenuItemVCAlignCallback(ByVal sender As Object, ByVal e As EventArgs)
-        
+
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         CodeBlockAlign(dte)
 
