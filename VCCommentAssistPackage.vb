@@ -99,11 +99,6 @@ Inherits Package
     ''' the OleMenuCommandService service and the MenuCommand class.
     ''' </summary>
     Private Sub MenuItemVCFileHeadCallback(ByVal sender As Object, ByVal e As EventArgs)
-        ' Show a Message Box to prove we were here
-        Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
-        Dim clsid As Guid = Guid.Empty
-        Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCFileHeadCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
 
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         FileCommentsEn(dte)
@@ -111,24 +106,14 @@ Inherits Package
     End Sub
 
     Private Sub MenuItemVCFunctionCallback(ByVal sender As Object, ByVal e As EventArgs)
-        ' Show a Message Box to prove we were here
-        Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
-        Dim clsid As Guid = Guid.Empty
-        Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCFunctionCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
-
+        
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         FunctionCommentEn(dte)
 
     End Sub
 
     Private Sub MenuItemVCClassCallback(ByVal sender As Object, ByVal e As EventArgs)
-        ' Show a Message Box to prove we were here
-        Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
-        Dim clsid As Guid = Guid.Empty
-        Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCClassCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
-
+        
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         ClassCommentEn(dte)
 
@@ -137,23 +122,14 @@ Inherits Package
 
     Private Sub MenuItemVCOneLineCallback(ByVal sender As Object, ByVal e As EventArgs)
         ' Show a Message Box to prove we were here
-        Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
-        Dim clsid As Guid = Guid.Empty
-        Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCOneLineCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
-
+        
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         CommentOneLine(DTE)
     End Sub
 
 
     Private Sub MenuItemVCAlignCallback(ByVal sender As Object, ByVal e As EventArgs)
-        ' Show a Message Box to prove we were here
-        Dim uiShell As IVsUIShell = TryCast(GetService(GetType(SVsUIShell)), IVsUIShell)
-        Dim clsid As Guid = Guid.Empty
-        Dim result As Integer
-        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(0, clsid, "MenuItemVCAlignCallback", String.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", Me.GetType().Name), String.Empty, 0, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, 0, result))
-
+        
         Dim dte As DTE = TryCast(Package.GetGlobalService(GetType(DTE)), DTE)
         CodeBlockAlign(dte)
 
@@ -300,14 +276,14 @@ Inherits Package
         ''dte.ActiveDocument.Selection.Insert("@author     " & author_name & "  @date  " & System.DateTime.Now.ToLongDateString())
         ''dte.ActiveDocument.Selection.NewLine()
         ''dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@brief      ")
+        dte.ActiveDocument.Selection.Insert("* @brief      ")
         GetTemplateParNameEn(dte, str_analysis)
         GetFunctionNameRtnEn(dte, str_analysis)
         GetFunctionParEn(dte, str_analysis)
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("@note       ")
+        dte.ActiveDocument.Selection.Insert("* @note       ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert("*/")
