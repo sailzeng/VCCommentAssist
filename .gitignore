@@ -1,3 +1,13 @@
 # Visual Basic
-obj
 
+obj
+Debug
+
+*.suo
+*.pdb
+
+extension.vsixmanifest
+VCCommentAssist.dll.CodeAnalysisLog.xml
+VCCommentAssist.dll.lastcodeanalysissucceeded
+VCCommentAssist.pkgdef
+VCCommentAssist.dll
