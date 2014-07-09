@@ -77,21 +77,21 @@
         </Strings>
       </Button>
 
-      <!-- VC++ Comment Function. -->
-      <Button guid="guidVCCommentAssistCmdSet" id="cmdidVCCommentFunction" priority="0x0000" type="Button">
-        <Parent guid="guidVCCommentAssistCmdSet" id="VCCommentToolbarGroup" />
-        <Icon guid="guidImages" id="bmpPic2" />
-        <Strings>
-          <ButtonText>VC Comment Function</ButtonText>
-        </Strings>
-      </Button>
-
       <!-- VC++ Comment Class . -->
       <Button guid="guidVCCommentAssistCmdSet" id="cmdidVCCommentClass" priority="0x0000" type="Button">
         <Parent guid="guidVCCommentAssistCmdSet" id="VCCommentToolbarGroup" />
-        <Icon guid="guidImages" id="bmpPic3" />
+        <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
           <ButtonText>VC Comment Class</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- VC++ Comment Function. -->
+      <Button guid="guidVCCommentAssistCmdSet" id="cmdidVCCommentFunction" priority="0x0000" type="Button">
+        <Parent guid="guidVCCommentAssistCmdSet" id="VCCommentToolbarGroup" />
+        <Icon guid="guidImages" id="bmpPic3" />
+        <Strings>
+          <ButtonText>VC Comment Function</ButtonText>
         </Strings>
       </Button>
 
@@ -141,8 +141,8 @@
       <IDSymbol name="VCCommentToolbar" value="0x1000" />
       <IDSymbol name="VCCommentToolbarGroup" value="0x1050" />
       <IDSymbol name="cmdidVCCommentFileHead" value="0x0100" />
-      <IDSymbol name="cmdidVCCommentFunction" value="0x0101" />
-      <IDSymbol name="cmdidVCCommentClass" value="0x0102" />
+      <IDSymbol name="cmdidVCCommentClass" value="0x0101" />
+      <IDSymbol name="cmdidVCCommentFunction" value="0x0102" />
       <IDSymbol name="cmdidVCCommentOneLine" value="0x0103" />
       <IDSymbol name="cmdidVCCommentAlign" value="0x0104" />
     </GuidSymbol>

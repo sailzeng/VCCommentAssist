@@ -71,14 +71,15 @@ Public NotInheritable Class VCCommentAssistPackage
             Dim menuItemVCFileHead As New MenuCommand(New EventHandler(AddressOf MenuItemVCFileHeadCallback), menuIDVCFileHead)
             mcs.AddCommand(menuItemVCFileHead)
 
-            ' Create vc comment file head command for the menu item.
-            Dim menuIDFunction As New CommandID(GuidList.guidVCCommentAssistCmdSet, CInt(PkgCmdIDList.cmdidVCCommentFunction))
-            Dim menuItemVCFunction As New MenuCommand(New EventHandler(AddressOf MenuItemVCFunctionCallback), menuIDFunction)
-            mcs.AddCommand(menuItemVCFunction)
 
             Dim menuIDClass As New CommandID(GuidList.guidVCCommentAssistCmdSet, CInt(PkgCmdIDList.cmdidVCCommentClass))
             Dim menuItemVCClass As New MenuCommand(New EventHandler(AddressOf MenuItemVCClassCallback), menuIDClass)
             mcs.AddCommand(menuItemVCClass)
+
+            ' Create vc comment file head command for the menu item.
+            Dim menuIDFunction As New CommandID(GuidList.guidVCCommentAssistCmdSet, CInt(PkgCmdIDList.cmdidVCCommentFunction))
+            Dim menuItemVCFunction As New MenuCommand(New EventHandler(AddressOf MenuItemVCFunctionCallback), menuIDFunction)
+            mcs.AddCommand(menuItemVCFunction)
 
             Dim menuIDOneLine As New CommandID(GuidList.guidVCCommentAssistCmdSet, CInt(PkgCmdIDList.cmdidVCCommentOneLine))
             Dim menuItemVCOneLine As New MenuCommand(New EventHandler(AddressOf MenuItemVCOneLineCallback), menuIDOneLine)
@@ -89,6 +90,25 @@ Public NotInheritable Class VCCommentAssistPackage
             mcs.AddCommand(menuItemVCAlign)
 
         End If
+
+        Dim readValue = My.Computer.Registry.GetValue(
+            "HKEY_CURRENT_USER\Software\VCCommentAssist", "Copyright_String", Nothing)
+        If (readValue Is Nothing) Then
+            My.Computer.Registry.SetValue(
+                "HKEY_CURRENT_USER\Software\VCCommentAssist", "Copyright_String", copyright_str)
+        Else
+            copyright_str = readValue
+        End If
+
+        readValue = My.Computer.Registry.GetValue(
+            "HKEY_CURRENT_USER\Software\VCCommentAssist", "Author_Name", Nothing)
+        If (readValue Is Nothing) Then
+            My.Computer.Registry.SetValue(
+                "HKEY_CURRENT_USER\Software\VCCommentAssist", "Author_Name", author_name)
+        Else
+            author_name = readValue
+        End If
+
     End Sub
 
 
@@ -275,9 +295,6 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.Insert("/*!")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        ''dte.ActiveDocument.Selection.Insert("@author     " & author_name & "  @date  " & System.DateTime.Now.ToLongDateString())
-        ''dte.ActiveDocument.Selection.NewLine()
-        ''dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert("* @brief      ")
         GetTemplateParNameEn(dte, str_analysis)
         GetFunctionNameRtnEn(dte, str_analysis)
@@ -384,9 +401,6 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.Insert("/*!")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        ''dte.ActiveDocument.Selection.Insert("@author     " & author_name & "  @date " & System.DateTime.Now.ToLongDateString())
-        ''dte.ActiveDocument.Selection.NewLine()
-        ''dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert("* @brief      ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
@@ -554,10 +568,15 @@ Public NotInheritable Class VCCommentAssistPackage
             End If
         End If
 
+        '取得函数的参数等，
+        If end_pos > 0 Then
+            end_pos = InStrRev(str_analysis, ">", end_pos)
+        End If
 
         '去掉templace等，返回
         If end_pos > 0 Then
-            str_template = Right(str_analysis, Len(str_analysis) - end_pos + 1)
+
+            str_template = Right(str_analysis, Len(str_analysis) - end_pos)
             str_analysis = Left(str_analysis, end_pos)
         Else
             Exit Sub
