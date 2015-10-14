@@ -109,6 +109,15 @@ Public NotInheritable Class VCCommentAssistPackage
             author_name = readValue
         End If
 
+        readValue = My.Computer.Registry.GetValue(
+            "HKEY_CURRENT_USER\Software\VCCommentAssist", "Comment_Style", Nothing)
+        If (readValue Is Nothing) Then
+            My.Computer.Registry.SetValue(
+                "HKEY_CURRENT_USER\Software\VCCommentAssist", "Comment_Style", comment_style)
+        Else
+            comment_style = readValue
+        End If
+
     End Sub
 
 
@@ -165,10 +174,18 @@ Public NotInheritable Class VCCommentAssistPackage
         End While
         indent_string = Space(space_counter)
     End Sub
+    's注释的格式
+    Public Enum CommentStyle As Integer
+        '格式///
+        Gang_Gang_Gang = 1
+        '格式/*!
+        Gang_Xing_Tan = 2
+    End Enum
 
     '你只需要修改这个定义就OK了。
     Dim copyright_str As String = "Apache License, Version 2.0 FULLSAIL"
     Dim author_name As String = "Sailzeng <sailerzeng@gmail.com>"
+    Dim comment_style As CommentStyle = CommentStyle.Gang_Gang_Gang
 
     '------------------------------------------------------------------------------
     'SUB DESCRIPTION: A Macro To Comment function 
@@ -235,7 +252,7 @@ Public NotInheritable Class VCCommentAssistPackage
             End If
 
             If (dte.ActiveDocument.Selection.CurrentLine = x_endfile) Then
-                MsgBox("Function define error or cursor in error line，cannot be found in pairs()！", vbOKOnly, "ERROR")
+                MsgBox("Function define error or cursor in error line cannot be found in pairs() ", vbOKOnly, "ERROR")
                 Exit Sub
             End If
 
@@ -301,7 +318,16 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("/// @brief      ")
+        If (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @brief      ")
+        ElseIf (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("/*!")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert(str_indent)
+            dte.ActiveDocument.Selection.Insert("* @brief      ")
+        End If
+
         GetTemplateParNameEn(dte, str_analysis, str_indent)
         GetFunctionNameRtnEn(dte, str_analysis, str_indent)
         GetFunctionParEn(dte, str_analysis, str_indent)
@@ -309,7 +335,15 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("/// @note       ")
+        If (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @note       ")
+        ElseIf (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("* @note       ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert(str_indent)
+            dte.ActiveDocument.Selection.Insert("*/")
+        End If
     End Sub
 
 
