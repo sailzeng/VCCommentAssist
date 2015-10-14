@@ -157,7 +157,14 @@ Public NotInheritable Class VCCommentAssistPackage
 
     End Sub
 
-
+    '判断代码的缩进的字符串个数，用于后面的对齐处理
+    Private Sub GetIndentationSpace(ByRef code_string As String, ByRef indent_string As String)
+        Dim space_counter As Integer = 0
+        While (StrComp(GetChar(code_string, space_counter + 1), " ") = 0)
+            space_counter = space_counter + 1
+        End While
+        indent_string = Space(space_counter)
+    End Sub
 
     '你只需要修改这个定义就OK了。
     Dim copyright_str As String = "Apache License, Version 2.0 FULLSAIL"
@@ -258,8 +265,10 @@ Public NotInheritable Class VCCommentAssistPackage
 
         Dim str_analysis As String
         Dim start_pos As Integer
+        Dim str_indent As String = ""
 
         str_analysis = str_seltxt
+        GetIndentationSpace(str_analysis, str_indent)
         start_pos = InStrRev(str_analysis, ")")
         str_analysis = Left(str_analysis, start_pos)
         str_analysis = Replace(str_analysis, Chr(9), " ")
@@ -291,22 +300,19 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.EndOfLine()
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-
-        dte.ActiveDocument.Selection.Insert("/*!")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @brief      ")
-        GetTemplateParNameEn(dte, str_analysis)
-        GetFunctionNameRtnEn(dte, str_analysis)
-        GetFunctionParEn(dte, str_analysis)
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("/// @brief      ")
+        GetTemplateParNameEn(dte, str_analysis, str_indent)
+        GetFunctionNameRtnEn(dte, str_analysis, str_indent)
+        GetFunctionParEn(dte, str_analysis, str_indent)
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @note       ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*/")
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("/// @note       ")
     End Sub
+
+
 
     'Judge Windows type is document type and C++ 
     Private Function JudgeWindowsType(ByVal dte As DTE) As Boolean
@@ -323,8 +329,9 @@ Public NotInheritable Class VCCommentAssistPackage
             ext_name = Right(ext_name, Len(ext_name) - pos + 1)
             ext_name = LCase(ext_name)
         End If
-
-        If ext_name <> ".h" And ext_name <> ".hpp" And ext_name <> ".hxx" And ext_name <> ".cpp" And ext_name <> ".c" And ext_name <> ".cxx" And ext_name <> ".inc" Then
+        '注意_是折行，诡异
+        If ext_name <> ".h" And ext_name <> ".hpp" And ext_name <> ".hxx" And ext_name <> ".cpp" And ext_name <> ".cc" _
+            And ext_name <> ".c" And ext_name <> ".cxx" And ext_name <> ".inc" Then
             MsgBox("This macro can only be run when a document is edited c/c++ file.", vbOKOnly, "ERROR")
             Return False
         End If
@@ -334,7 +341,7 @@ Public NotInheritable Class VCCommentAssistPackage
 
     '用于得到函数名称，返回值
     'A Function To Get Function Name and Function Return Value
-    Private Sub GetFunctionNameRtnEn(ByVal dte As DTE, ByRef str_fun As String)
+    Private Sub GetFunctionNameRtnEn(ByVal dte As DTE, ByRef str_fun As String, ByRef str_indent As String)
 
         Dim str_fun_return As String = Trim(str_fun)
 
@@ -379,7 +386,8 @@ Public NotInheritable Class VCCommentAssistPackage
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @return     " + return_name)
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("/// @return     " + return_name)
 
         str_fun = Right(str_fun, Len(str_fun) - start_bracket + 1)
 
@@ -394,30 +402,29 @@ Public NotInheritable Class VCCommentAssistPackage
         End If
 
         Dim str_analysis As String = ""
+        Dim str_indent As String = ""
         GetClassDefString(dte, str_analysis)
+        GetIndentationSpace(str_analysis, str_indent)
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/*!")
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("/// @brief      ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @brief      ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
-        GetTemplateParNameEn(dte, str_analysis)
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("///             ")
+        GetTemplateParNameEn(dte, str_analysis, str_indent)
         ''GetClassNameEn(str_analysis)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @note       ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*/")
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("/// @note       ")
     End Sub
-    '
+    '得到class 定义的语句
     Private Sub GetClassDefString(ByRef dte As DTE, ByRef str_analysis As String)
 
-        ' Record class Start Postion
+        ' 记录开始的位置Record class Start Postion
         Dim x_current As Integer
         Dim y_current As Integer
         x_current = dte.ActiveDocument.Selection.CurrentLine
@@ -469,12 +476,10 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.MoveTo(x_current, 1)
         dte.ActiveDocument.Selection.LineUp()
         dte.ActiveDocument.Selection.EndOfLine()
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
     End Sub
 
     '得到类的名字
-    Sub GetClassNameEn(ByRef dte As DTE, ByVal str_analysis As String)
+    Sub GetClassNameEn(ByRef dte As DTE, ByVal str_analysis As String, ByRef str_indent As String)
 
         str_analysis = Trim(str_analysis)
 
@@ -493,13 +498,14 @@ Public NotInheritable Class VCCommentAssistPackage
 
 
         dte.ActiveDocument.Selection.NewLine()
-
+        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+        dte.ActiveDocument.Selection.Insert(str_indent)
         '如果是类的定义
         If InStr(class_name, "class ") <> 0 Then
             Dim start_pos As Integer = InStr(class_name, "class ")
             class_name = Right(class_name, Len(class_name) - start_pos - 4)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("* @class      " & class_name)
+            dte.ActiveDocument.Selection.Insert("/// @class      " & class_name)
         End If
 
         '如果是结构的定义
@@ -507,7 +513,23 @@ Public NotInheritable Class VCCommentAssistPackage
             Dim start_pos As Integer = InStr(class_name, "struct ")
             class_name = Right(class_name, Len(class_name) - start_pos - 5)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("* @struct     " & class_name)
+            dte.ActiveDocument.Selection.Insert("/// @struct     " & class_name)
+        End If
+
+        '如果是枚举的定义
+        If InStr(class_name, "enum ") <> 0 Then
+            Dim start_pos As Integer = InStr(class_name, "enum ")
+            class_name = Right(class_name, Len(class_name) - start_pos - 3)
+            class_name = Trim(class_name)
+            dte.ActiveDocument.Selection.Insert("/// @enum       " & class_name)
+        End If
+
+        '如果是联合的定义
+        If InStr(class_name, "union ") <> 0 Then
+            Dim start_pos As Integer = InStr(class_name, "union ")
+            class_name = Right(class_name, Len(class_name) - start_pos - 4)
+            class_name = Trim(class_name)
+            dte.ActiveDocument.Selection.Insert("/// @union       " & class_name)
         End If
 
         '
@@ -517,12 +539,13 @@ Public NotInheritable Class VCCommentAssistPackage
 
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @ref        " & inherit_class)
+        dte.ActiveDocument.Selection.Insert(str_indent)
+        dte.ActiveDocument.Selection.Insert("/// @ref        " & inherit_class)
     End Sub
 
     '用于得到函数参数
     'A Function To Get Function parameter
-    Private Sub GetFunctionParEn(ByVal dte As DTE, ByVal str_fun_param As String)
+    Private Sub GetFunctionParEn(ByVal dte As DTE, ByVal str_fun_param As String, ByRef str_indent As String)
         '参数的起始位置
         Dim start_para As Integer = 0
         Dim end_para As Integer = 0
@@ -543,13 +566,13 @@ Public NotInheritable Class VCCommentAssistPackage
 
         If (str_fun_param = "" Or str_fun_param = "void") Then
         Else
-            GetParamterNameEn(dte, str_fun_param, True)
+            GetParamterNameEn(dte, str_fun_param, str_indent, True)
         End If
     End Sub
 
     '生产模板参数
     '注意参数用的应用
-    Private Sub GetTemplateParNameEn(ByVal dte As DTE, ByRef str_template As String)
+    Private Sub GetTemplateParNameEn(ByVal dte As DTE, ByRef str_template As String, ByRef str_indent As String)
 
         Dim str_analysis As String = Trim(str_template)
 
@@ -599,7 +622,7 @@ Public NotInheritable Class VCCommentAssistPackage
             Exit Sub
         End If
 
-        GetParamterNameEn(dte, str_analysis, False)
+        GetParamterNameEn(dte, str_analysis, str_indent, False)
 
     End Sub
     '
@@ -632,7 +655,8 @@ Public NotInheritable Class VCCommentAssistPackage
     '
     '分析得到参数的名称，同时打印出来
     'if_func 为True标识是函数参数，False标识是模版参数
-    Private Sub GetParamterNameEn(ByVal dte As DTE, ByVal str_analysis_para As String, ByVal if_func As Boolean)
+    Private Sub GetParamterNameEn(ByVal dte As DTE, ByVal str_analysis_para As String, ByRef str_indent As String, _
+                                  ByVal if_func As Boolean)
 
         '参数个数
         Dim param_counter As Integer = 0
@@ -709,10 +733,11 @@ Public NotInheritable Class VCCommentAssistPackage
 
             dte.ActiveDocument.Selection.NewLine()
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert(str_indent)
             If (if_func) Then
-                dte.ActiveDocument.Selection.Insert("* @param      ")
+                dte.ActiveDocument.Selection.Insert("/// @param      ")
             Else
-                dte.ActiveDocument.Selection.Insert("* @tparam     ")
+                dte.ActiveDocument.Selection.Insert("/// @tparam     ")
             End If
             dte.ActiveDocument.Selection.Text = str_param
 
@@ -740,54 +765,49 @@ Public NotInheritable Class VCCommentAssistPackage
         'Input Comments in this Macro
         dte.ActiveDocument.Selection.StartOfDocument()
         dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.LineUp()
-        dte.ActiveDocument.Selection.Insert("/*!")
+        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+        dte.ActiveDocument.Selection.Insert("/// @copyright  2004-" & System.DateTime.Now.Year & "  " & copyright_str)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @copyright  2004-" & System.DateTime.Now.Year & "  " & copyright_str)
+        dte.ActiveDocument.Selection.Insert("/// @filename   " & file_name)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @filename   " & file_name)
+        dte.ActiveDocument.Selection.Insert("/// @author     " & author_name)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @author     " & author_name)
+        dte.ActiveDocument.Selection.Insert("/// @version    ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @version    ")
+        dte.ActiveDocument.Selection.Insert("/// @date       " & System.DateTime.Now.ToLongDateString())
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @date       " & System.DateTime.Now.ToLongDateString())
+        dte.ActiveDocument.Selection.Insert("/// @brief      ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @brief      ")
+        dte.ActiveDocument.Selection.Insert("///             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
+        dte.ActiveDocument.Selection.Insert("///             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
+        dte.ActiveDocument.Selection.Insert("/// @details    ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @details    ")
+        dte.ActiveDocument.Selection.Insert("///             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
+        dte.ActiveDocument.Selection.Insert("///             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
+        dte.ActiveDocument.Selection.Insert("///             ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
+        dte.ActiveDocument.Selection.Insert("/// @note       ")
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("* @note       ")
+        dte.ActiveDocument.Selection.Insert("///             ")
         dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*             ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("*/")
-
+        '保存感觉有点过度了，
         'dte.ActiveDocument.save
         'End Recording
     End Sub
