@@ -176,10 +176,12 @@ Public NotInheritable Class VCCommentAssistPackage
     End Sub
     's注释的格式
     Public Enum CommentStyle As Integer
-        '格式///
-        Gang_Gang_Gang = 1
         '格式/*!
-        Gang_Xing_Tan = 2
+        Gang_Xing_Tan = 1
+        '格式///
+        Gang_Gang_Gang = 2
+        '格式//!
+        Gang_Gang_Tan = 3
     End Enum
 
     '你只需要修改这个定义就OK了。
@@ -318,14 +320,17 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        If (comment_style = CommentStyle.Gang_Gang_Gang) Then
-            dte.ActiveDocument.Selection.Insert("/// @brief      ")
-        ElseIf (comment_style = CommentStyle.Gang_Xing_Tan) Then
+
+        If (comment_style = CommentStyle.Gang_Gang_Tan) Then
             dte.ActiveDocument.Selection.Insert("/*!")
             dte.ActiveDocument.Selection.NewLine()
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
             dte.ActiveDocument.Selection.Insert(str_indent)
             dte.ActiveDocument.Selection.Insert("* @brief      ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @brief      ")
+        ElseIf (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//! @brief      ")
         End If
 
         GetTemplateParNameEn(dte, str_analysis, str_indent)
@@ -335,15 +340,19 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        If (comment_style = CommentStyle.Gang_Gang_Gang) Then
-            dte.ActiveDocument.Selection.Insert("/// @note       ")
-        ElseIf (comment_style = CommentStyle.Gang_Xing_Tan) Then
+
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
             dte.ActiveDocument.Selection.Insert("* @note       ")
             dte.ActiveDocument.Selection.NewLine()
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
             dte.ActiveDocument.Selection.Insert(str_indent)
             dte.ActiveDocument.Selection.Insert("*/")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @note       ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//! @note       ")
         End If
+
     End Sub
 
 
@@ -421,7 +430,14 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("/// @return     " + return_name)
+        
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("* @return     " + return_name)
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @return     " + return_name)
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("/// @return     " + return_name)
+        End If
 
         str_fun = Right(str_fun, Len(str_fun) - start_bracket + 1)
 
@@ -443,17 +459,48 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("/// @brief      ")
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("/*!")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert(str_indent)
+            dte.ActiveDocument.Selection.Insert("* @brief      ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @brief      ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//! @brief      ")
+        End If
+
+
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("///             ")
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("*             ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("///             ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//!             ")
+        End If
+
+
         GetTemplateParNameEn(dte, str_analysis, str_indent)
         ''GetClassNameEn(str_analysis)
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("/// @note       ")
+
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("* note       ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert(str_indent)
+            dte.ActiveDocument.Selection.Insert("*/")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("//! @note       ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("/// @note       ")
+        End If
     End Sub
     '得到class 定义的语句
     Private Sub GetClassDefString(ByRef dte As DTE, ByRef str_analysis As String)
@@ -539,7 +586,14 @@ Public NotInheritable Class VCCommentAssistPackage
             Dim start_pos As Integer = InStr(class_name, "class ")
             class_name = Right(class_name, Len(class_name) - start_pos - 4)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("/// @class      " & class_name)
+            If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+                dte.ActiveDocument.Selection.Insert("* @class      " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+                dte.ActiveDocument.Selection.Insert("/// @class      " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+                dte.ActiveDocument.Selection.Insert("//! @class      " & class_name)
+            End If
+
         End If
 
         '如果是结构的定义
@@ -547,7 +601,14 @@ Public NotInheritable Class VCCommentAssistPackage
             Dim start_pos As Integer = InStr(class_name, "struct ")
             class_name = Right(class_name, Len(class_name) - start_pos - 5)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("/// @struct     " & class_name)
+
+            If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+                dte.ActiveDocument.Selection.Insert("* @struct     " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+                dte.ActiveDocument.Selection.Insert("/// @struct     " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+                dte.ActiveDocument.Selection.Insert("//! @struct     " & class_name)
+            End If
         End If
 
         '如果是枚举的定义
@@ -555,7 +616,13 @@ Public NotInheritable Class VCCommentAssistPackage
             Dim start_pos As Integer = InStr(class_name, "enum ")
             class_name = Right(class_name, Len(class_name) - start_pos - 3)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("/// @enum       " & class_name)
+            If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+                dte.ActiveDocument.Selection.Insert("* @enum       " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+                dte.ActiveDocument.Selection.Insert("/// @enum       " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+                dte.ActiveDocument.Selection.Insert("//! @enum       " & class_name)
+            End If
         End If
 
         '如果是联合的定义
@@ -563,7 +630,13 @@ Public NotInheritable Class VCCommentAssistPackage
             Dim start_pos As Integer = InStr(class_name, "union ")
             class_name = Right(class_name, Len(class_name) - start_pos - 4)
             class_name = Trim(class_name)
-            dte.ActiveDocument.Selection.Insert("/// @union       " & class_name)
+            If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+                dte.ActiveDocument.Selection.Insert("* @union      " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+                dte.ActiveDocument.Selection.Insert("/// @union      " & class_name)
+            ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+                dte.ActiveDocument.Selection.Insert("//! @union      " & class_name)
+            End If
         End If
 
         '
@@ -574,7 +647,13 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
-        dte.ActiveDocument.Selection.Insert("/// @ref        " & inherit_class)
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("* @ref        " & inherit_class)
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @ref        " & inherit_class)
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//! @ref        " & inherit_class)
+        End If
     End Sub
 
     '用于得到函数参数
@@ -769,9 +848,21 @@ Public NotInheritable Class VCCommentAssistPackage
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
             dte.ActiveDocument.Selection.Insert(str_indent)
             If (if_func) Then
-                dte.ActiveDocument.Selection.Insert("/// @param      ")
+                If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+                    dte.ActiveDocument.Selection.Insert("* @param      ")
+                ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+                    dte.ActiveDocument.Selection.Insert("/// @param      ")
+                ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+                    dte.ActiveDocument.Selection.Insert("//! @param      ")
+                End If
             Else
-                dte.ActiveDocument.Selection.Insert("/// @tparam     ")
+                If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+                    dte.ActiveDocument.Selection.Insert("* @tparam     ")
+                ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+                    dte.ActiveDocument.Selection.Insert("/// @tparam     ")
+                ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+                    dte.ActiveDocument.Selection.Insert("//! @tparam     ")
+                End If
             End If
             dte.ActiveDocument.Selection.Text = str_param
 
@@ -800,48 +891,145 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.StartOfDocument()
         dte.ActiveDocument.Selection.NewLine()
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @copyright  2004-" & System.DateTime.Now.Year & "  " & copyright_str)
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @filename   " & file_name)
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @author     " & author_name)
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @version    ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @date       " & System.DateTime.Now.ToLongDateString())
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @brief      ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("///             ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("///             ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @details    ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("///             ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("///             ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("///             ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("/// @note       ")
-        dte.ActiveDocument.Selection.NewLine()
-        dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
-        dte.ActiveDocument.Selection.Insert("///             ")
-        dte.ActiveDocument.Selection.NewLine()
-        '保存感觉有点过度了，
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
+            dte.ActiveDocument.Selection.Insert("/*!")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @copyright  2004-" & System.DateTime.Now.Year & _
+                                                "  " & copyright_str)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @filename   " & file_name)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @author     " & author_name)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @version    ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @date       " & System.DateTime.Now.ToLongDateString())
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @brief      ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @details    ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("* @note       ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("*/")
+            dte.ActiveDocument.Selection.NewLine()
+
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
+            dte.ActiveDocument.Selection.Insert("/// @copyright  2004-" & System.DateTime.Now.Year & _
+                                                "  " & copyright_str)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @filename   " & file_name)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @author     " & author_name)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @version    ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @date       " & System.DateTime.Now.ToLongDateString())
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @brief      ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("///             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("///             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @details    ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("///             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("///             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("///             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("/// @note       ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("///             ")
+            dte.ActiveDocument.Selection.NewLine()
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//! @copyright  2004-" & System.DateTime.Now.Year & _
+                                                "  " & copyright_str)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @filename   " & file_name)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @author     " & author_name)
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @version    ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @date       " & System.DateTime.Now.ToLongDateString())
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @brief      ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//!             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//!             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @details    ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//!             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//!             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//!             ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//! @note       ")
+            dte.ActiveDocument.Selection.NewLine()
+            dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
+            dte.ActiveDocument.Selection.Insert("//!             ")
+            dte.ActiveDocument.Selection.NewLine()
+        End If
+
+        '保存感觉有点过度了
         'dte.ActiveDocument.save
         'End Recording
     End Sub
