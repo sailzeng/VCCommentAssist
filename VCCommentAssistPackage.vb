@@ -109,13 +109,16 @@ Public NotInheritable Class VCCommentAssistPackage
             author_name = readValue
         End If
 
-        readValue = My.Computer.Registry.GetValue(
-            "HKEY_CURRENT_USER\Software\VCCommentAssist", "Comment_Style", Nothing)
-        If (readValue Is Nothing) Then
+        Dim cstyle As Integer
+
+        cstyle = My.Computer.Registry.GetValue(
+            "HKEY_CURRENT_USER\Software\VCCommentAssist", "Comment_Style", -1)
+        If (cstyle = -1) Then
+            cstyle = comment_style
             My.Computer.Registry.SetValue(
-                "HKEY_CURRENT_USER\Software\VCCommentAssist", "Comment_Style", comment_style)
+                "HKEY_CURRENT_USER\Software\VCCommentAssist", "Comment_Style", cstyle)
         Else
-            comment_style = readValue
+            comment_style = cstyle
         End If
 
     End Sub
@@ -321,7 +324,7 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
         dte.ActiveDocument.Selection.Insert(str_indent)
 
-        If (comment_style = CommentStyle.Gang_Gang_Tan) Then
+        If (comment_style = CommentStyle.Gang_Xing_Tan) Then
             dte.ActiveDocument.Selection.Insert("/*!")
             dte.ActiveDocument.Selection.NewLine()
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
@@ -329,7 +332,7 @@ Public NotInheritable Class VCCommentAssistPackage
             dte.ActiveDocument.Selection.Insert("* @brief      ")
         ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
             dte.ActiveDocument.Selection.Insert("/// @brief      ")
-        ElseIf (comment_style = CommentStyle.Gang_Xing_Tan) Then
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
             dte.ActiveDocument.Selection.Insert("//! @brief      ")
         End If
 
