@@ -190,7 +190,7 @@ Public NotInheritable Class VCCommentAssistPackage
     '你只需要修改这个定义就OK了。
     Dim copyright_str As String = "Apache License, Version 2.0 FULLSAIL"
     Dim author_name As String = "Sailzeng <sailerzeng@gmail.com>"
-    Dim comment_style As CommentStyle = CommentStyle.Gang_Gang_Gang
+    Dim comment_style As CommentStyle = CommentStyle.Gang_Xing_Tan
 
     '------------------------------------------------------------------------------
     'SUB DESCRIPTION: A Macro To Comment function 
@@ -494,15 +494,15 @@ Public NotInheritable Class VCCommentAssistPackage
         dte.ActiveDocument.Selection.Insert(str_indent)
 
         If (comment_style = CommentStyle.Gang_Xing_Tan) Then
-            dte.ActiveDocument.Selection.Insert("* note       ")
+            dte.ActiveDocument.Selection.Insert("* note        ")
             dte.ActiveDocument.Selection.NewLine()
             dte.ActiveDocument.Selection.MoveTo(dte.ActiveDocument.Selection.CurrentLine, 1)
             dte.ActiveDocument.Selection.Insert(str_indent)
             dte.ActiveDocument.Selection.Insert("*/")
         ElseIf (comment_style = CommentStyle.Gang_Gang_Gang) Then
-            dte.ActiveDocument.Selection.Insert("//! @note       ")
-        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
             dte.ActiveDocument.Selection.Insert("/// @note       ")
+        ElseIf (comment_style = CommentStyle.Gang_Gang_Tan) Then
+            dte.ActiveDocument.Selection.Insert("//! @note       ")
         End If
     End Sub
     '得到class 定义的语句
